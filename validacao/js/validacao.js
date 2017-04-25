@@ -17,15 +17,19 @@ function cadastrar(){
   	return false;
   }
 
+  if(document.login.confimar_senha.value == ""){
+    alert('Preencha o campo confirmar senha');
+    document.login.confimar_senha.focus();
+    return false;
+  }
+  
   if(document.login.confimar_senha.value != document.login.senha.value){
   	alert('As senhas são diferentes');
   	document.login.confimar_senha.focus();
   	return false;
   }
 
-  if(document.login.confimar_senha.value == ""){
-  	alert('Preencha o campo confirmar senha');
-  	document.login.confimar_senha.focus();
-  	return false;
-  }
+  
+
+  return true;
 }
