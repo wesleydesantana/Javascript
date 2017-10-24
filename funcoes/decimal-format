@@ -1,0 +1,64 @@
+// Format a number n using: 
+//   p decimal places (two by default)
+//   ts as the thousands separator (comma by default) and
+//   dp as the  decimal point (period by default).
+//
+//   If p < 0 or p > 20 results are implementation dependent.
+function formatNumber(n, p, ts, dp) {
+  var t = [];
+  // Get arguments, set defaults
+  if (typeof p  == 'undefined') p  = 2;
+  if (typeof ts == 'undefined') ts = ',';
+  if (typeof dp == 'undefined') dp = '.';
+
+  // Get number and decimal part of n
+  n = Number(n).toFixed(p).split('.');
+
+  // Add thousands separator and decimal point (if requied):
+  for (var iLen = n[0].length, i = iLen? iLen % 3 || 3 : 0, j = 0; i <= iLen; i+=3) {
+    t.push(n[0].substring(j, i));
+    j = i;
+  }
+  // Insert separators and return result
+  return t.join(ts) + (n[1]? dp + n[1] : '');
+}
+
+
+//*
+console.log(formatNumber(
+    1234567890.567,  // value to format
+                 4,  // number of decimal places
+               '.',  // thousands separator
+                ','  // decimal separator
+ ));                 // result: 1.234.567.890,5670
+//*/
+
+console.log(formatNumber(
+           123.567,  // value to format
+                 1   // number of decimal places
+ ));                 // result: 123.6
+
+console.log(formatNumber(
+         '123.567',  // value to format
+                 0   // number of decimal places
+ ));                 // result: 123.6
+
+console.log(formatNumber(
+               123,  // value to format
+                 0   // number of decimal places
+ ));                 // result: 123
+
+console.log(formatNumber(
+                13,  // value to format
+                 2   // number of decimal places
+ ));                 // result: 13.00
+
+console.log(formatNumber(
+                 0   // value to format
+                     // number of decimal places
+ ));                 // result: 0.00
+
+console.log(formatNumber(
+                     // value to format
+                     // number of decimal places
+ )); 
