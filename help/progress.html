@@ -21,11 +21,11 @@
                 </div>
         </div>
         <script>
-            var cont = 5;
-            if(cont > 0){
+            var cont = 10;
+            for(i = 0; i < cont; i+=5){
                 var x = document.getElementById("progresso_Id");
-                document.getElementById("progresso_Id").innerHTML  = "10%";
-                x.setAttribute("style", "width:10%");
+                document.getElementById("progresso_Id").innerHTML  = i + "%";
+                x.setAttribute("style", "width:"+i+"%");
             }
         </script>
 </body>
