@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ViaCep</title>
+     <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+</head>
+<body>
+    <script src="jquery.js"></script>
+    
+    <nav>
+        <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Logo</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="#">CEP</a></li>
+        </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <form method="get" action=".">
+            <label>Cep:
+              <input name="cep" type="text" id="cep" value="" size="10" maxlength="9">
+            </label>
+            <br />
+            <label>Rua:
+              <input name="rua" type="text" id="logradouro" size="60" />
+            </label>
+            <br />
+            <label>Bairro:
+              <input name="bairro" type="text" id="bairro" size="40" />
+            </label>
+            <br />
+            <label>Cidade:
+              <input name="cidade" type="text" id="localidade" size="40" />
+            </label>
+            <br />
+            <label>Estado:
+              <input name="uf" type="text" id="uf" size="2" />
+            </label>
+            <br />
+            <label>IBGE:
+              <input name="ibge" type="text" id="ibge" size="8" />
+            </label>
+            <br />
+          </form>          
+    </div>
+</body>
+<script>
+var inputsCEP = $('#logradouro, #bairro, #localidade, #uf, #ibge');
+var inputsRUA = $('#cep, #bairro, #ibge');
+var validacep = /^[0-9]{8}$/;
+
+function limpa_formulário_cep(alerta) {
+  if (alerta !== undefined) {
+    alert(alerta);
+  }
+
+  inputsCEP.val('');
+}
+
+function get(url) {
+
+  $.get(url, function(data) {
+
+    if (!("erro" in data)) {
+
+      if (Object.prototype.toString.call(data) === '[object Array]') {
+        var data = data[0];
+      }
+
+      $.each(data, function(nome, info) {
+        $('#' + nome).val(nome === 'cep' ? info.replace(/\D/g, '') : info).attr('info', nome === 'cep' ? info.replace(/\D/g, '') : info);
+      });
+
+
+
+    } else {
+      limpa_formulário_cep("CEP não encontrado.");
+    }
+
+  });
+}
+
+// Digitando RUA/CIDADE/UF
+$('#logradouro, #localidade, #uf').on('blur', function(e) {
+
+  if ($('#logradouro').val() !== '' && $('#logradouro').val() !== $('#logradouro').attr('info') && $('#localidade').val() !== '' && $('#localidade').val() !== $('#localidade').attr('info') && $('#uf').val() !== '' && $('#uf').val() !== $('#uf').attr('info')) {
+
+    inputsRUA.val('...');
+    get('https://viacep.com.br/ws/' + $('#uf').val() + '/' + $('#localidade').val() + '/' + $('#logradouro').val() + '/json/');
+  }
+
+});
+
+// Digitando CEP
+$('#cep').on('blur', function(e) {
+
+  var cep = $('#cep').val().replace(/\D/g, '');
+
+  if (cep !== "" && validacep.test(cep)) {
+
+    inputsCEP.val('...');
+    get('https://viacep.com.br/ws/' + cep + '/json/');
+
+  } else {
+    limpa_formulário_cep(cep == "" ? undefined : "Formato de CEP inválido.");
+  }
+});
+
+</script>
+</html>
